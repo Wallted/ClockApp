@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +11,16 @@ export class AppComponent {
   baudRate = Uint32Array.from([56700]);
   filters = [];
   connected = false;
-
+  
+  buffer = "RAMKI\n";
+  emit = new EventEmitter();
   click() {
     if(this.connected)
       return;
     
+    this.emit.subscribe(result=>{
+      this.buffer+=result;
+    });
     var device;
     var dupa = window.navigator['usb'];
     dupa.requestDevice({ filters: this.filters })
@@ -35,13 +40,13 @@ export class AppComponent {
         index: 0
       }, this.baudRate))
       .then(()=>{
-        this.claim(device);
+        this.claim(device, this.emit);
       })
       .catch(error => { console.log(error); });
 
   }
 
-  private claim(device) {
+  private claim(device, emit) {
     var repeat = function (device, msgBuffer) {
       device.transferIn(1, 1)
         .then(result => {
@@ -50,6 +55,7 @@ export class AppComponent {
           msgBuffer += byte;
           if(byte == '\n'){
             console.log(msgBuffer);
+            emit.emit(msgBuffer+"\n"); 
             msgBuffer = "";  
           }
         })
