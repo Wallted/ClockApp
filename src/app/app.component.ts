@@ -48,7 +48,7 @@ export class AppComponent {
 
   private claim(device, emit) {
     var repeat = function (device, msgBuffer) {
-      device.transferIn(1, 1)
+      device.transferIn(0, 1)
         .then(result => {
           let decoder = new TextDecoder();
           let byte = decoder.decode(result.data)
