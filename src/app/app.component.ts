@@ -8,7 +8,7 @@ import { Component, EventEmitter } from '@angular/core';
 export class AppComponent {
   title = 'ClockApp';
 
-  baudRate = Uint32Array.from([56700]);
+  baudRate = Uint32Array.from([128000]);
   filters = [];
   connected = false;
   
@@ -53,13 +53,15 @@ export class AppComponent {
           let decoder = new TextDecoder();
           let byte = decoder.decode(result.data)
           msgBuffer += byte;
-          if(byte == '\n'){
-            console.log(msgBuffer);
-            emit.emit(msgBuffer+"\n"); 
-            msgBuffer = "";  
-          }
+          // if(byte == '\n'){
+          //   console.log(msgBuffer);
+          //   emit.emit(msgBuffer+"\n"); 
+          //   msgBuffer = "";  
+          // }
+          console.log(byte);
+          emit.emit(byte + "\n");
         })
-        .then(function () {
+        .then(function () { 
           repeat(device, msgBuffer);
         });
     }
