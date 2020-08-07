@@ -8,7 +8,7 @@ import { Component, EventEmitter } from '@angular/core';
 export class AppComponent {
   title = 'ClockApp';
 
-  baudRate = Uint32Array.from([128000]);
+  baudRate = Uint32Array.from([57600]);
   filters = [];
   connected = false;
   
