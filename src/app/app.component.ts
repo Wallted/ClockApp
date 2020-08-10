@@ -11,7 +11,7 @@ export class AppComponent {
   baudRate = Uint32Array.from([57600]);
   filters = [];
   connected = false;
-  
+  dupa;
   buffer = "RAMKI\n";
   emit = new EventEmitter();
   click() {
@@ -39,6 +39,21 @@ export class AppComponent {
         value: 0,
         index: 0
       }, this.baudRate))
+      .then(result =>{
+        console.log("Bytes written:" + result.bytesWritten + result.status)
+      })
+      // .then(async () => await device.controlTransferIn({
+      //   requestType: 'vendor',
+      //   recipient: 'interface',
+      //   request: 0x1E,
+      //   value: 0,
+      //   index: 0
+      // }, dupa))
+      // .then(result => {
+      //   let decoder = new TextDecoder();
+      //   let res = decoder.decode(result.data)
+      //   console.log(res)
+      // })
       .then(()=>{
         this.claim(device, this.emit);
       })
@@ -53,13 +68,13 @@ export class AppComponent {
           let decoder = new TextDecoder();
           let byte = decoder.decode(result.data)
           msgBuffer += byte;
-          // if(byte == '\n'){
-          //   console.log(msgBuffer);
-          //   emit.emit(msgBuffer+"\n"); 
-          //   msgBuffer = "";  
-          // }
-          console.log(byte);
-          emit.emit(byte + "\n");
+          if(byte == '\n'){
+            console.log(msgBuffer);
+            emit.emit(msgBuffer+"\n"); 
+            msgBuffer = "";  
+          }
+          // console.log(byte);
+          // emit.emit(byte + "\n");
         })
         .then(function () { 
           repeat(device, msgBuffer);
