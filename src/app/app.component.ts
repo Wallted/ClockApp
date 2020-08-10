@@ -68,13 +68,13 @@ export class AppComponent {
           let decoder = new TextDecoder();
           let byte = decoder.decode(result.data)
           msgBuffer += byte;
-          if(byte == '\n'){
-            console.log(msgBuffer);
-            emit.emit(msgBuffer+"\n"); 
-            msgBuffer = "";  
-          }
-          // console.log(byte);
-          // emit.emit(byte + "\n");
+          // if(byte == '\n'){
+          //   console.log(msgBuffer);
+          //   emit.emit(msgBuffer); 
+          //   msgBuffer = "";  
+          // }
+          console.log(byte);
+          emit.emit(byte + "\n");
         })
         .then(function () { 
           repeat(device, msgBuffer);
