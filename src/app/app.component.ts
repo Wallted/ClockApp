@@ -7,7 +7,7 @@ import { Component, EventEmitter } from '@angular/core';
 })
 export class AppComponent {
   title = 'ClockApp';
-  consoleLogs = "";
+  stack = 0;
   baudRate = Uint32Array.from([57600]);
   filters = [];
   connected = false;
@@ -19,7 +19,6 @@ export class AppComponent {
       return;
     
     this.emit.subscribe(result=>{
-      this.log(result);
       this.buffer+=result;
     });
     var device;
@@ -41,7 +40,7 @@ export class AppComponent {
         index: 0
       }, this.baudRate))
       .then(result =>{
-        this.log("Bytes written:" + result.bytesWritten + result.status)
+        console.log("Bytes written:" + result.bytesWritten + result.status)
       })
       // .then(async () => await device.controlTransferIn({
       //   requestType: 'vendor',
@@ -56,13 +55,13 @@ export class AppComponent {
       //   console.log(res)
       // })
       .then(()=>{
-        this.claim(device, this.emit, this.consoleLogs);
+        this.claim(device, this.emit);
       })
       .catch(error => { console.log(error); });
 
   }
 
-  private claim(device, emit, consoleLogs) {
+  private claim(device, emit) {
     var repeat = function (device, msgBuffer) {
       device.transferIn(1, 50)
         .then(result => {
@@ -74,8 +73,7 @@ export class AppComponent {
           //   emit.emit(msgBuffer); 
           //   msgBuffer = "";  
           // }
-          console.log(byte);
-          emit.emit(byte + "\n");
+          emit.emit(byte);
         })
         .then(function () { 
           repeat(device, msgBuffer);
@@ -84,8 +82,4 @@ export class AppComponent {
 
     repeat(device, "")
   };
-
-  private log(msg: string){
-    this.consoleLogs += (msg + "\n");
-  }
 }
