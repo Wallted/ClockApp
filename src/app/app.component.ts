@@ -19,7 +19,7 @@ export class AppComponent {
       return;
     
     this.emit.subscribe(result=>{
-      this.log("dupa");
+      this.log(result);
       this.buffer+=result;
     });
     var device;
@@ -85,7 +85,7 @@ export class AppComponent {
     repeat(device, "")
   };
 
-  private log(msg){
+  private log(msg: string){
     this.consoleLogs += (msg + "\n");
   }
 }
